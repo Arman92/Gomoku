@@ -1,13 +1,14 @@
 import React from "react";
-import "./App.css";
 
-import Board from "./components/Board";
+import { AppContainer } from "./styled";
+
+import Board from "../Board";
 
 const App: React.FC = () => {
   return (
-    <div>
+    <AppContainer>
       <Board />
-    </div>
+    </AppContainer>
   );
 };
 
