@@ -1,13 +1,49 @@
-body {
+*,
+*::after,
+*::before {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%; /* our desired size: 10px / default browser font size: 16px => 10px/16px = 62.5%  => 1rem = 10px */
+}
+
+body {
+  font-weight: 400;
+  line-height: 1.7;
+  box-sizing: border-box;
+  direction: rtl;
+  min-width: 320px;
+  text-align: right;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+a,
+area,
+button,
+[role="button"],
+input:not([type="range"]),
+label,
+select,
+summary,
+textarea {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+textarea {
+  -webkit-appearance: none;
+}
+
+#root {
+  height: 100vh;
 }
