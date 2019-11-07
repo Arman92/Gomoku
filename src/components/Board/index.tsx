@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { BoardContainer } from "./styled";
+import { BoardContainer, ButtonContainer, Button } from "./styled";
 
 const BoardComponent: FC = () => {
   const rows = 8;
@@ -9,7 +9,11 @@ const BoardComponent: FC = () => {
   const buttons: any[] = [];
 
   for (let i = 0; i < rows * columns; i++) {
-    buttons.push(<button key={`btn-${i}`}>i</button>);
+    buttons.push(
+      <ButtonContainer>
+        <Button key={`btn-${i}`}/>
+      </ButtonContainer>
+    );
   }
 
   return (
