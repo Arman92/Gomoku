@@ -82,20 +82,28 @@ export const Button = styled.button`
   border-radius: 100%;
   z-index: 1;
 
-  &:hover {
-    display: block;
-    background: black;
-    border-radius: 50%;
-    margin: 0;
-    background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+  &.btn-free {
+    &:hover {
+      background: black;
+      background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+    }
+
+    &:active {
+      opacity: 1;
+      background: black;
+      background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+    }
   }
 
-  &:active {
+  &.btn-selected-1 {
     opacity: 1;
-    display: block;
     background: black;
-    border-radius: 50%;
-    margin: 0;
-    background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+    background: radial-gradient(circle at 30% 30%, blue, #000);
+  }
+
+  &.btn-selected-2 {
+    opacity: 1;
+    background: black;
+    background: radial-gradient(circle at 30% 30%, red, #000);
   }
 `;
