@@ -97,13 +97,11 @@ export const Button = styled.button`
 
   &.btn-selected-1 {
     opacity: 1;
-    background: black;
-    background: radial-gradient(circle at 30% 30%, blue, #000);
+    background: radial-gradient(circle at 30% 30%, white, #868484);
   }
 
   &.btn-selected-2 {
     opacity: 1;
-    background: black;
-    background: radial-gradient(circle at 30% 30%, red, #000);
+    background: radial-gradient(circle at 30% 30%, #5f5f5f, #000);
   }
 `;

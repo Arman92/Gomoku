@@ -17,7 +17,8 @@
     "variable-name": false,
     "interface-over-type-literal": false,
     "jsx-no-lambda": false,
-    "function-name": false
+    "function-name": false,
+    "no-increment-decrement": false
   },
   "rulesDirectory": []
 }

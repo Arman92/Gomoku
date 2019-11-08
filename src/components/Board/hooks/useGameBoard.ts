@@ -1,79 +1,47 @@
 import { useReducer } from "react";
+import { GameState, Cell, Player } from "../types";
+import { GameBoard } from "./GameBoard";
 
 // Actions that can be dispatched
-export type GameBoardAction = {
+type GameBoardAction = {
   type: "play" | "undo";
-  payload?: {
-    row: number;
-    column: number;
-  };
-};
-
-// Our game board state type
-type GameBoardState = {
-  cells: number[];
-  moves: Array<{ row: number; column: number }>;
-  turn: 1 | 2;
-};
-
-// Initialize function that creates a fresh game board state
-const init = ({
-  rows,
-  columns
-}: {
-  rows: number;
-  columns: number;
-}): GameBoardState => {
-  return {
-    cells: new Array(rows * columns).fill(0),
-    moves: [],
-    turn: 1
-  };
+  payload?: Cell;
 };
 
 // reducer hook to manipulate game board state
 export const useGameBoard = (
   rows: number,
   columns: number
-): [GameBoardState, React.Dispatch<GameBoardAction>] => {
-  const reducer = (
-    state: GameBoardState,
-    action: GameBoardAction
-  ): GameBoardState => {
+): [GameState, React.Dispatch<GameBoardAction>] => {
+  //
+  // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
+  const gameBoard = GameBoard.getInstance(rows, columns);
+
+  //
+  // Our reducer function to manipulate the states
+  const reducer = (_state: GameState, action: GameBoardAction): GameState => {
     switch (action.type) {
       //
       // Play assigns a move into the state and changes the cells array and eventually switches the player's turn
       case "play":
-        const { row, column } = action.payload as any;
+        const cell = action.payload as Cell;
+        gameBoard.play(cell);
 
-        const newCells = [...state.cells];
-        newCells[row * columns + column] = state.turn;
-        state.moves.push({ row, column });
-
-        return {
-          ...state,
-          cells: newCells,
-          turn: state.turn === 1 ? 2 : 1
-        };
+        return gameBoard.getGameState();
 
       // Undo pops a move from the state's moves stack and undoes it in returning state
       // (literally sets the corresponding cell value to zero)
       // If there is no moves left, does nothing and returns the same state
       case "undo":
-        const move = state.moves.pop();
-        if (move) {
-          state.cells[move.row * columns + move.column] = 0;
-          return {
-            ...state,
-            turn: state.turn === 1 ? 2 : 1
-          };
-        }
-        return state;
+        gameBoard.undo();
 
+        return gameBoard.getGameState();
+
+      // throw an error
       default:
         throw new Error("Unsupported action type");
     }
   };
 
-  return useReducer(reducer, { rows, columns }, init);
+  return useReducer(reducer, gameBoard.getGameState());
 };

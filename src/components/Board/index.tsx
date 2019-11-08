@@ -2,11 +2,11 @@ import React, { FC, useState, useCallback } from "react";
 
 import { BoardContainer, ButtonContainer, Button } from "./styled";
 import { useGameBoard } from "./hooks/useGameBoard";
+import { Player } from "./types";
 
 const BoardComponent: FC = () => {
   const [rows, setRows] = useState(8);
   const [columns, setColumns] = useState(8);
-  // const [gameBoard, setGameBoard] = useState(new Array(rows * columns).fill(0));
   const [gameBoard, dispatchGameBoard] = useGameBoard(rows, columns);
 
   const buttonClickCallback = useCallback(
@@ -18,15 +18,15 @@ const BoardComponent: FC = () => {
 
       dispatchGameBoard({ type: "play", payload: { row, column } });
     },
-    [gameBoard, rows, columns]
+    [gameBoard]
   );
 
   const buttons: any[] = [];
   for (let i = 0; i < rows; i = i + 1) {
     for (let j = 0; j < columns; j = j + 1) {
       let className = "btn-free";
-      if (gameBoard.cells[i * columns + j] === 1) className = "btn-selected-1";
-      else if (gameBoard.cells[i * columns + j] === 2) {
+      if (gameBoard.cells[i][j] === 1) className = "btn-selected-1";
+      else if (gameBoard.cells[i][j] === 2) {
         className = "btn-selected-2";
       }
 
@@ -45,6 +45,11 @@ const BoardComponent: FC = () => {
 
   return (
     <div>
+      {gameBoard.winner !== Player.NONE ? (
+        <div style={{ marginTop: "50px", fontSize: "20px" }}>
+          Player wins {gameBoard.winner}
+        </div>
+      ) : null}
       <BoardContainer rows={rows} columns={columns}>
         {buttons}
       </BoardContainer>
