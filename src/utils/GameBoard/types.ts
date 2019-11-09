@@ -8,6 +8,7 @@ export type GameState = {
   turn: Player;
   winnerCells: Cell[];
   winner: Player;
+  lastPlayedCell: Cell | undefined;
 };
 
 export enum CellValue {

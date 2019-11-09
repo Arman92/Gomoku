@@ -1,4 +1,4 @@
-import { Cell, Player, CellValue, GameState } from "../types";
+import { Cell, Player, CellValue, GameState } from "./types";
 
 /**
  * Game Board handler that stores game state and handles moves, player turns and more!
@@ -104,7 +104,9 @@ export class GameBoard {
       cells: [...this.cells],
       winner: this.winner,
       winnerCells: this.winnerCells,
-      turn: this.turn
+      turn: this.turn,
+      lastPlayedCell:
+        this.moves.length > 0 ? this.moves[this.moves.length - 1] : undefined
     };
   }
 
