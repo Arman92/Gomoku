@@ -90,29 +90,39 @@ export const Button = styled.button<ButtonProps>`
   &.btn-free {
     &:hover {
       background: black;
-      background: ${props => props.turn === Player.WHITE ? "radial-gradient(circle at 30% 30%, white, #868484)" : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)" } ;
+      background: ${props =>
+        props.turn === Player.WHITE
+          ? "radial-gradient(circle at 30% 30%, white, #868484)"
+          : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)"};
     }
 
     &:active {
       opacity: 1;
       background: black;
-      background: ${props => props.turn === Player.WHITE ? "radial-gradient(circle at 30% 30%, white, #868484)" : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)" } ;
+      background: ${props =>
+        props.turn === Player.WHITE
+          ? "radial-gradient(circle at 30% 30%, white, #868484)"
+          : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)"};
     }
   }
 
   &:focus {
-      outline: none;
+    outline: none;
   }
 
   &.btn-selected-white {
     opacity: 1;
     background: radial-gradient(circle at 30% 30%, white, #868484);
-    box-shadow:0px 3px 5px rgba(0,0,0,0.5);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
   }
 
   &.btn-selected-black {
     opacity: 1;
     background: radial-gradient(circle at 30% 30%, #5f5f5f, #000);
-    box-shadow:0px 3px 5px rgba(0,0,0,0.5);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+  }
+
+  &.btn-winner-cell {
+    box-shadow: 0 0 5px 3px #ff003b;
   }
 `;

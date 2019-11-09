@@ -6,8 +6,8 @@ export type Cell = {
 export type GameState = {
   cells: number[][];
   turn: Player;
-  winnerCells?: Cell[];
-  winner?: Player;
+  winnerCells: Cell[];
+  winner: Player;
 };
 
 export enum CellValue {

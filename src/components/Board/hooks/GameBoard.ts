@@ -1,7 +1,19 @@
 import { Cell, Player, CellValue, GameState } from "../types";
 
+/**
+ * Game Board handler that stores game state and handles moves, player turns and more!
+ */
 export class GameBoard {
-  public static getInstance(rows: number, columns: number) {
+  /**
+   * Gets the Singleton instance of GameBoard.
+   * creates a fresh instance if it's called for the first time
+   *
+   * @param rows  Number of rows of Game Board
+   * @param columns  Number of columns of Game Board
+   *
+   * @returns Singleton instance of GameBoard
+   */
+  public static getInstance(rows: number, columns: number): GameBoard {
     if (!GameBoard.instance) GameBoard.instance = new GameBoard(rows, columns);
     return GameBoard.instance;
   }
@@ -23,6 +35,9 @@ export class GameBoard {
     this.clearCells();
   }
 
+  /**
+   * Re-creates the 'cells' with 'empty' values
+   */
   public clearCells() {
     this.cells = [];
 
@@ -35,18 +50,22 @@ export class GameBoard {
     }
   }
 
+  /**
+   * Switches the Player turn (e.g. from Player.WHITE to Player.BLACK and vice versa)
+   */
   public switchTurns(): void {
     this.turn = this.turn === Player.BLACK ? Player.WHITE : Player.BLACK;
   }
 
-  public getCells(): number[][] {
-    return this.cells;
-  }
-
-  public getCellValue(row: number, column: number): CellValue {
-    return this.cells[row][column];
-  }
-
+  /**
+   * Play the specified cell for current Player,
+   *
+   * @remarks
+   * Sets the specified cell value to the current Player, adds this move to the 'moves' stack and immediately
+   * checks if this move makes this player the Winner!
+   *
+   * @param cell  The cell that player wants to make his own
+   */
   public play(cell: Cell): void {
     const { row, column } = cell;
     this.cells[row][column] = this.turn;
@@ -55,6 +74,13 @@ export class GameBoard {
     this.switchTurns();
   }
 
+  /**
+   * Undo the last move of Game
+   *
+   * @remarks
+   * Sets the last changed cell's value to Empty, switches the player turn and resets the winning statuses.
+   *
+   */
   public undo(): void {
     const move = this.moves.pop();
     if (move) {
@@ -65,6 +91,14 @@ export class GameBoard {
     }
   }
 
+  /**
+   * Get the current state of Game Board
+   *
+   * @remarks
+   * 'cells' array is cloned so React would 'know' it's a new state and triggers a re-render.
+   *
+   * @returns The current state of Game Board
+   */
   public getGameState(): GameState {
     return {
       cells: [...this.cells],
@@ -74,6 +108,13 @@ export class GameBoard {
     };
   }
 
+  /**
+   * Checks whether the last move has made the player winner of the game
+   * First checks the row corresponding to the specified cell, if 5 cells are marked for this player
+   * (including the passed cell itself) then current player wins the game. Otherwise checks the corresponding
+   * column and diagonals (both Major [ ╲ ] and Minor [ ╱ ])
+   * @param cell  The last move the player has made.
+   */
   private checkIfWins(cell: Cell) {
     // first of all push the current cell as we know it's a winner:
     this.winnerCells = [cell];
