@@ -1,8 +1,13 @@
 import styled from "styled-components";
+import { Player } from "./types";
 
 type BoardProps = {
   rows: number;
   columns: number;
+};
+
+type ButtonProps = {
+  turn: Player;
 };
 
 export const BoardContainer = styled.div<BoardProps>`
@@ -70,7 +75,7 @@ export const ButtonContainer = styled.div<BoardProps>`
   }
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<ButtonProps>`
   width: 75%;
   height: 75%;
   background: transparent;
@@ -85,23 +90,29 @@ export const Button = styled.button`
   &.btn-free {
     &:hover {
       background: black;
-      background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+      background: ${props => props.turn === Player.WHITE ? "radial-gradient(circle at 30% 30%, white, #868484)" : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)" } ;
     }
 
     &:active {
       opacity: 1;
       background: black;
-      background: radial-gradient(circle at 30% 30%, #8c8c8c, #000);
+      background: ${props => props.turn === Player.WHITE ? "radial-gradient(circle at 30% 30%, white, #868484)" : "radial-gradient(circle at 30% 30%, #5f5f5f, #000)" } ;
     }
   }
 
-  &.btn-selected-1 {
-    opacity: 1;
-    background: radial-gradient(circle at 30% 30%, white, #868484);
+  &:focus {
+      outline: none;
   }
 
-  &.btn-selected-2 {
+  &.btn-selected-white {
+    opacity: 1;
+    background: radial-gradient(circle at 30% 30%, white, #868484);
+    box-shadow:0px 3px 5px rgba(0,0,0,0.5);
+  }
+
+  &.btn-selected-black {
     opacity: 1;
     background: radial-gradient(circle at 30% 30%, #5f5f5f, #000);
+    box-shadow:0px 3px 5px rgba(0,0,0,0.5);
   }
 `;

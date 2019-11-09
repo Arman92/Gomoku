@@ -5,6 +5,7 @@ export type Cell = {
 
 export type GameState = {
   cells: number[][];
+  turn: Player;
   winnerCells?: Cell[];
   winner?: Player;
 };

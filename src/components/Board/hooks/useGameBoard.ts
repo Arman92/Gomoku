@@ -1,5 +1,5 @@
-import { useReducer } from "react";
-import { GameState, Cell, Player } from "../types";
+import { useReducer, useCallback } from "react";
+import { GameState, Cell } from "../types";
 import { GameBoard } from "./GameBoard";
 
 // Actions that can be dispatched
@@ -13,13 +13,15 @@ export const useGameBoard = (
   rows: number,
   columns: number
 ): [GameState, React.Dispatch<GameBoardAction>] => {
+ 
+ 
   //
   // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
   const gameBoard = GameBoard.getInstance(rows, columns);
 
   //
   // Our reducer function to manipulate the states
-  const reducer = (_state: GameState, action: GameBoardAction): GameState => {
+  const reducer = useCallback((_state: GameState, action: GameBoardAction): GameState => {
     switch (action.type) {
       //
       // Play assigns a move into the state and changes the cells array and eventually switches the player's turn
@@ -41,7 +43,7 @@ export const useGameBoard = (
       default:
         throw new Error("Unsupported action type");
     }
-  };
+  }, [gameBoard]);
 
   return useReducer(reducer, gameBoard.getGameState());
 };

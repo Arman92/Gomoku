@@ -59,6 +59,9 @@ export class GameBoard {
     const move = this.moves.pop();
     if (move) {
       this.cells[move.row][move.column] = CellValue.EMPTY;
+      this.winner = Player.NONE;
+      this.winnerCells = [];
+      this.switchTurns();
     }
   }
 
@@ -66,7 +69,8 @@ export class GameBoard {
     return {
       cells: [...this.cells],
       winner: this.winner,
-      winnerCells: this.winnerCells
+      winnerCells: this.winnerCells,
+      turn: this.turn
     };
   }
 
