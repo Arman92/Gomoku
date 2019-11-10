@@ -22,15 +22,20 @@ export class GameBoard {
   public readonly rows: number;
   public readonly columns: number;
 
+  public onGameFinishedCallback: ((winner: Player) => void) | null= null;
+
   private cells: number[][] = [];
   private moves: Cell[] = [];
+  private finished: boolean = false;
   private turn: Player = Player.BLACK;
   private winner: Player = Player.NONE;
   private winnerCells: Cell[] = [];
+  private emptyCellsCount: number = 0;
 
   private constructor(rows: number, columns: number) {
     this.rows = rows;
     this.columns = columns;
+    this.emptyCellsCount = rows * columns;
 
     this.clearCells();
   }
@@ -72,6 +77,7 @@ export class GameBoard {
     this.moves.push({ row, column });
     this.checkIfWins(cell);
     this.switchTurns();
+    this.emptyCellsCount--;
   }
 
   /**
@@ -88,8 +94,23 @@ export class GameBoard {
       this.winner = Player.NONE;
       this.winnerCells = [];
       this.switchTurns();
+    this.emptyCellsCount++;
     }
   }
+  /**
+   * Resets the state for a new Game
+   *
+   *
+   */
+  public reset(): void {
+    this.finished = false;
+      this.clearCells();
+      this.winner = Player.NONE;
+      this.winnerCells = [];
+      this.turn = Player.BLACK
+      this.emptyCellsCount = this.rows * this.columns;
+  }
+  
 
   /**
    * Get the current state of Game Board
@@ -101,6 +122,7 @@ export class GameBoard {
    */
   public getGameState(): GameState {
     return {
+      finished: this.finished,
       cells: [...this.cells],
       winner: this.winner,
       winnerCells: this.winnerCells,
@@ -108,6 +130,17 @@ export class GameBoard {
       lastPlayedCell:
         this.moves.length > 0 ? this.moves[this.moves.length - 1] : undefined
     };
+  }
+
+  
+  /**
+   * Gets called when the game is finished (Either a player wins or the Game is Tie)
+   * @param cell  The last move the player has made.
+   */
+  private gameFinished(winner: Player) {
+    this.finished = true;
+    this.winner = winner;
+      if (this.onGameFinishedCallback) this.onGameFinishedCallback(winner);
   }
 
   /**
@@ -130,7 +163,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);
       return;
     }
 
@@ -142,7 +175,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -157,7 +190,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -169,7 +202,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -192,7 +225,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -207,7 +240,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -227,7 +260,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
     }
 
@@ -242,8 +275,16 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.winner = this.turn;
+      this.gameFinished(this.turn);      
       return;
+    }
+
+    
+    //
+    //
+    /* ----------- CHECK IF GAME IS A TIE ------------- */
+    if (this.emptyCellsCount === 0) {
+      this.gameFinished(Player.NONE);
     }
   }
 }

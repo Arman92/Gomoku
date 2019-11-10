@@ -1,75 +1,78 @@
-import React, { FC, useState, useCallback } from "react";
+import React, { FC, useState, useCallback } from 'react';
 
-import { GameContainer, CellContainer, Button } from "./styled";
-import { useGameBoard } from "./hooks/useGameBoard";
-import { Player } from "@gobang/utils/GameBoard/types";
+import { GameContainer, CellContainer, Button } from './styled';
+import { useGameBoard } from './hooks/useGameBoard';
+import { GameBoard, Player } from '@gobang/utils/GameBoard';
 
-const GameComponent: FC = () => {
-  const [rows] = useState(19);
-  const [columns] = useState(19);
-  const [gameBoard, dispatchGameBoard] = useGameBoard(rows, columns);
+type GameProps = {
+	rows: number;
+	columns: number;
+	gameBoard: GameBoard;
+};
 
-  const cellClickHandler = useCallback(
-    event => {
-      // Efficiently extract row and column from clicked button
-      // (There is other react-ways of doing this, but they will create a callback for each and every button)
-      const row = parseInt(event.target.dataset.row, 10);
-      const column = parseInt(event.target.dataset.column, 10);
+const GameComponent: FC<GameProps> = (props: GameProps) => {
+	const { rows, columns, gameBoard } = props;
 
-      dispatchGameBoard({ type: "play", payload: { row, column } });
-    },
-    [dispatchGameBoard]
-  );
+	const [ gameState, dispatchGameBoard ] = useGameBoard(gameBoard);
 
-  const buttons: any[] = [];
+	const cellClickHandler = useCallback(
+		(event) => {
+			// Efficiently extract row and column from clicked button
+			// (There is other react-ways of doing this, but they will create a callback for each and every button)
+			const row = parseInt(event.target.dataset.row, 10);
+			const column = parseInt(event.target.dataset.column, 10);
 
-  for (let i = 0; i < rows; i = i + 1) {
-    for (let j = 0; j < columns; j = j + 1) {
-      let className = "btn-free";
-      if (gameBoard.cells[i][j] === Player.WHITE) {
-        className = "btn-selected-white";
-      } else if (gameBoard.cells[i][j] === Player.BLACK) {
-        className = "btn-selected-black";
-      }
+			dispatchGameBoard({ type: 'play', payload: { row, column } });
+		},
+		[ dispatchGameBoard ]
+	);
 
-      // If game has a winner
-      if (gameBoard.winner !== Player.NONE) {
-        gameBoard.winnerCells.forEach(winnerCell => {
-          if (winnerCell.row === i && winnerCell.column === j) {
-            className += " btn-winner-cell";
-          }
-        });
-      }
+	const buttons: any[] = [];
 
-      // Highlight last move:
-      const { lastPlayedCell } = gameBoard;
-      if (
-        lastPlayedCell &&
-        lastPlayedCell.row === i &&
-        lastPlayedCell.column === j
-      ) {
-        className += " btn-last-played";
-      }
+	for (let i = 0; i < rows; i = i + 1) {
+		for (let j = 0; j < columns; j = j + 1) {
+			let className = 'btn-free';
+			if (gameState.cells[i][j] === Player.WHITE) {
+				className = 'btn-selected-white';
+			} else if (gameState.cells[i][j] === Player.BLACK) {
+				className = 'btn-selected-black';
+			}
 
-      buttons.push(
-        <CellContainer rows={rows} columns={columns} key={`btn-${i}-${j}`}>
-          <Button
-            turn={gameBoard.turn}
-            className={className}
-            onClick={cellClickHandler}
-            data-row={i}
-            data-column={j}
-          />
-        </CellContainer>
-      );
-    }
-  }
+			// If game has a winner
+			if (gameState.winner !== Player.NONE) {
+				gameState.winnerCells.forEach((winnerCell) => {
+					if (winnerCell.row === i && winnerCell.column === j) {
+						className += ' btn-winner-cell';
+					}
+				});
+			}
 
-  return (
-    <GameContainer rows={rows} columns={columns}>
-      {buttons}
-    </GameContainer>
-  );
+			// Highlight last move:
+			const { lastPlayedCell } = gameState;
+			if (lastPlayedCell && lastPlayedCell.row === i && lastPlayedCell.column === j) {
+				className += ' btn-last-played';
+			}
+
+			buttons.push(
+				<CellContainer rows={rows} columns={columns} key={`btn-${i}-${j}`}>
+					<Button
+						turn={gameState.turn}
+						className={className}
+						onClick={cellClickHandler}
+						data-row={i}
+						data-column={j}
+						disabled={gameState.finished}
+					/>
+				</CellContainer>
+			);
+		}
+	}
+
+	return (
+		<GameContainer rows={rows} columns={columns}>
+			{buttons}
+		</GameContainer>
+	);
 };
 
 export default GameComponent;

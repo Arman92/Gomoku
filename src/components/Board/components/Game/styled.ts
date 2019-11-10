@@ -124,6 +124,10 @@ export const Button = styled.button<ButtonProps>`
     box-shadow: 0 0 5px 3px #ff003b;
   }
 
+  &:disabled:hover {
+    cursor: not-allowed;
+  }
+
   @-webkit-keyframes pulse {
     0% {
       border-color: #eff1f2;

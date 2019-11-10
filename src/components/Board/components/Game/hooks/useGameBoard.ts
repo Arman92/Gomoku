@@ -5,7 +5,7 @@ import { GameBoard, GameState, Cell } from "@gobang/utils/GameBoard";
  * Actions that can be dispatched
  */
 type GameBoardAction = {
-  type: "play" | "undo";
+  type: "play" | "undo"     | "reset";
   payload?: Cell;
 };
 
@@ -18,12 +18,8 @@ type GameBoardAction = {
  * @returns Array of two elements, first the GameState and the second a dispatch function
  */
 export const useGameBoard = (
-  rows: number,
-  columns: number
-): [GameState, React.Dispatch<GameBoardAction>] => {
-  //
-  // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
-  const gameBoard = GameBoard.getInstance(rows, columns);
+gameBoard: GameBoard
+  ): [GameState, React.Dispatch<GameBoardAction>] => {
 
   //
   // Our reducer function to manipulate the states
@@ -44,6 +40,11 @@ export const useGameBoard = (
         // If there is no moves left, does nothing and returns the same state
         case "undo":
           gameBoard.undo();
+
+          return gameBoard.getGameState();
+
+        case "reset":
+          gameBoard.reset();
 
           return gameBoard.getGameState();
 

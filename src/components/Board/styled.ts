@@ -1,6 +1,7 @@
 import styled from "styled-components";
-
 import boardBg from "@gobang/assets/imgs/2551066.jpg";
+
+export { StyledButton } from './components/Dialog/styled';
 
 export const BoardContainer = styled.div`
   width: 90vw;
@@ -29,6 +30,7 @@ export const Header = styled.header`
   }
 `;
 
+
 export const Content = styled.div`
   display: flex;
   flex-direction: row;
@@ -50,3 +52,4 @@ export const RightContainer = styled.div`
     margin: 2rem 1rem;
   }
 `;
+
