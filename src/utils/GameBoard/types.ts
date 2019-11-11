@@ -24,7 +24,13 @@ export enum Player {
   BLACK = 2
 }
 
-export enum GameEventType {
-  GAME_FINISHED,
-  GAME_TIE
+export enum Opponent {
+  COMPUTER = "ai",
+  HUMAN = "human"
+}
+
+export enum Difficulty {
+  NOVICE = "novice",
+  MEDIUM = "medium",
+  EXPERT = "expert"
 }

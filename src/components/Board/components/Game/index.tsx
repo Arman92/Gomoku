@@ -63,7 +63,9 @@ const GameComponent: FC<GameProps> = (props: GameProps) => {
             onClick={cellClickHandler}
             data-row={i}
             data-column={j}
-            disabled={gameState.finished}
+            disabled={
+              gameState.finished || gameState.cells[i][j] !== Player.NONE
+            }
           />
         </CellContainer>
       );

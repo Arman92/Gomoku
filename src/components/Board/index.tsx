@@ -13,17 +13,23 @@ import { useGameBoard } from "./components/Game/hooks/useGameBoard";
 import GameFinishedDialog from "./components/GameFinishedDialog";
 import NewGameDialog from "./components/NewGameDialog";
 
-import { GameBoard, Player } from "@gobang/utils/GameBoard";
+import {
+  GameBoard,
+  Player,
+  Difficulty,
+  Opponent
+} from "@gobang/utils/GameBoard";
 
 const BoardComponent: FC = () => {
   const length = 19;
 
-  // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
-  const gameBoard: GameBoard = GameBoard.getInstance(length);
-
   const [gameFinishedDlgOpen, setGameFinishedDlgOpen] = useState(false);
   const [newGameDialogOpen, setNewGameDialogOpen] = useState(false);
   const [winner, setWinner] = useState<null | Player>(null);
+
+  // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
+  const gameBoard: GameBoard = GameBoard.getInstance(length);
+
   const [gameState, dispatchGameBoard] = useGameBoard(gameBoard);
 
   const onGameFinished = (gameWinner: Player) => {
@@ -44,7 +50,16 @@ const BoardComponent: FC = () => {
     setGameFinishedDlgOpen(false);
   };
 
-  const onNewGame = () => {};
+  const onNewGame = (
+    opponent: Opponent,
+    playerColor: Player,
+    difficulty: Difficulty
+  ) => {
+    gameBoard.setOpponent(opponent);
+    gameBoard.setPlayerColor(playerColor);
+    gameBoard.setDifficulty(difficulty);
+    dispatchGameBoard({ type: "reset" });
+  };
 
   useEffect(() => {
     // Set the callback listeners
@@ -109,7 +124,7 @@ const BoardComponent: FC = () => {
             </RightContainer>
           </Content>
         ),
-        [gameState]
+        [gameState, dispatchGameBoard]
       )}
     </BoardContainer>
   );

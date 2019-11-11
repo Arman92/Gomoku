@@ -1,4 +1,12 @@
-import { Cell, Player, CellValue, GameState } from "./types";
+import { GameAI } from "@gobang/utils/GameAI";
+import {
+  Cell,
+  Player,
+  CellValue,
+  GameState,
+  Opponent,
+  Difficulty
+} from "./types";
 
 /**
  * Game Board handler that stores game state and handles moves, player turns and more!
@@ -13,8 +21,33 @@ export class GameBoard {
    * @returns Singleton instance of GameBoard
    */
   public static getInstance(length: number): GameBoard {
-    if (!GameBoard.instance) GameBoard.instance = new GameBoard(length);
+    if (
+      !GameBoard.instance ||
+      (GameBoard.instance && length !== GameBoard.instance.length)
+    ) {
+      GameBoard.instance = new GameBoard(length);
+    }
     return GameBoard.instance;
+  }
+
+  public static clone(instance: GameBoard): GameBoard {
+    const newInstance = new GameBoard(instance.getLength());
+
+    for (let i = 0; i < instance.length; i++) {
+      for (let j = 0; j < instance.length; j++) {
+        newInstance.cells[i][j] = instance.cells[i][j];
+      }
+    }
+    newInstance.turn = instance.turn;
+    newInstance.moves = [...instance.moves];
+    newInstance.finished = instance.finished;
+    newInstance.winner = instance.winner;
+    newInstance.winnerCells = [...instance.winnerCells];
+    newInstance.emptyCellsCount = instance.emptyCellsCount;
+    newInstance.opponent = instance.opponent;
+    newInstance.playerColor = instance.playerColor;
+
+    return newInstance;
   }
 
   private static instance: GameBoard | null = null;
@@ -29,6 +62,10 @@ export class GameBoard {
   private winner: Player = Player.NONE;
   private winnerCells: Cell[] = [];
   private emptyCellsCount: number = 0;
+  private opponent: Opponent = Opponent.HUMAN;
+  private playerColor: Player = Player.WHITE;
+  private difficulty: Difficulty = Difficulty.MEDIUM;
+  private ai: GameAI | null = null;
 
   private constructor(length: number) {
     this.length = length;
@@ -55,6 +92,24 @@ export class GameBoard {
   }
 
   /**
+   * Get the cells of the game board.
+   *
+   * @returns The cells matrix of game board
+   */
+  public getCells(): number[][] {
+    return this.cells;
+  }
+
+  /**
+   * Get the length of the game board.
+   *
+   * @returns The lentgh of game matrix (No of cells in each row or column)
+   */
+  public getLength(): number {
+    return this.length;
+  }
+
+  /**
    * Switches the Player turn (e.g. from Player.WHITE to Player.BLACK and vice versa)
    */
   public switchTurns(): void {
@@ -70,13 +125,47 @@ export class GameBoard {
    *
    * @param cell  The cell that player wants to make his own
    */
-  public play(cell: Cell): void {
+  public play(cell: Cell, isAI?: boolean): void {
     const { row, column } = cell;
-    this.cells[row][column] = this.turn;
+
+    if (this.opponent === Opponent.COMPUTER) {
+      this.cells[row][column] = isAI
+        ? this.playerColor === Player.WHITE
+          ? Player.BLACK
+          : Player.WHITE
+        : this.playerColor;
+    } else {
+      this.cells[row][column] = this.turn;
+    }
+
     this.moves.push({ row, column });
     this.emptyCellsCount--;
     this.checkIfWins(cell);
     this.switchTurns();
+
+    if (
+      this.opponent === Opponent.COMPUTER &&
+      !isAI &&
+      this.ai &&
+      !this.finished
+    ) {
+      let difficultyValue;
+
+      switch (this.difficulty) {
+        case Difficulty.NOVICE:
+        default:
+          difficultyValue = 3;
+          break;
+        case Difficulty.MEDIUM:
+          difficultyValue = 4;
+          break;
+        case Difficulty.EXPERT:
+          difficultyValue = 5;
+          break;
+      }
+      const aiMove = this.ai.calculateNextMove(difficultyValue);
+      this.play({ row: aiMove[0], column: aiMove[1] }, true);
+    }
   }
 
   /**
@@ -106,7 +195,7 @@ export class GameBoard {
     this.finished = false;
     this.clearCells();
     this.winner = Player.NONE;
-    this.turn = Player.BLACK;
+    if (this.opponent === Opponent.HUMAN) this.turn = Player.BLACK;
   }
 
   /**
@@ -127,6 +216,35 @@ export class GameBoard {
       lastPlayedCell:
         this.moves.length > 0 ? this.moves[this.moves.length - 1] : undefined
     };
+  }
+
+  /**
+   * Set the game Opponent (Human or AI)
+   * @param opponent  The Opponent to set
+   */
+  public setOpponent(opponent: Opponent) {
+    this.opponent = opponent;
+
+    if (opponent === Opponent.COMPUTER) {
+      this.ai = new GameAI(this);
+    }
+  }
+
+  /**
+   * Set the human player color in case of playing against the AI
+   * @param playerColor  The Player Color to set for human player
+   */
+  public setPlayerColor(playerColor: Player) {
+    this.playerColor = playerColor;
+    this.turn = playerColor;
+  }
+
+  /**
+   * Sets the AI depth search / difficulty
+   * @param difficulty  The AI Difficulty
+   */
+  public setDifficulty(difficulty: Difficulty) {
+    this.difficulty = difficulty;
   }
 
   /**

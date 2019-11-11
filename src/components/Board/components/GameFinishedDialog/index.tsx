@@ -20,9 +20,10 @@ const GameEndDialog: FC<DialogProps> = (props: DialogProps) => {
       onClose={onClose}
       fullWidth={true}
       maxWidth="md"
+      scroll="body"
     >
       <StyledDialogContent>
-        <Typography variant="h1" component="h2">
+        <Typography variant="h2" component="h2">
           {content}
         </Typography>
       </StyledDialogContent>
