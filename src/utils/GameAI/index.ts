@@ -36,13 +36,11 @@ export class GameAI {
   }
 
   public calculateNextMove(depth: number): number[] {
-    // this.board.thinkingStarted();
     let move: number[] = new Array<number>(2);
     const startTime: number = new Date().getTime();
     // Check if any available move can finish the game
     let bestMove: any[] = this.searchWinningMove(this.board);
     if (bestMove && bestMove.length > 0) {
-      console.log("Finisher!");
       move[0] = bestMove[1];
       move[1] = bestMove[2];
     } else {
@@ -61,14 +59,6 @@ export class GameAI {
         move[1] = bestMove[2];
       }
     }
-    console.log(
-      "Cases calculated: " +
-        this.evaluationCount +
-        " Calculation time: " +
-        (new Date().getTime() - startTime) +
-        " ms"
-    );
-    // this.board.thinkingFinished();
 
     this.evaluationCount = 0;
 

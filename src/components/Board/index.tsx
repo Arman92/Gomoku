@@ -23,8 +23,9 @@ import {
 const BoardComponent: FC = () => {
   const length = 19;
 
+  const [aiThinking, setAIThinking] = useState(false);
   const [gameFinishedDlgOpen, setGameFinishedDlgOpen] = useState(false);
-  const [newGameDialogOpen, setNewGameDialogOpen] = useState(false);
+  const [newGameDialogOpen, setNewGameDialogOpen] = useState(true);
   const [winner, setWinner] = useState<null | Player>(null);
 
   // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
@@ -32,24 +33,35 @@ const BoardComponent: FC = () => {
 
   const [gameState, dispatchGameBoard] = useGameBoard(gameBoard);
 
+  // Callback when game is finished (tie or win)
   const onGameFinished = (gameWinner: Player) => {
     setGameFinishedDlgOpen(true);
     setWinner(gameWinner);
   };
 
+  // Callback when game is finished (tie or win)
+  const onAIThinkingChanged = (thinking: boolean) => {
+    setAIThinking(thinking);
+    dispatchGameBoard({ type: "requestState" });
+  };
+
+  // Callback to close the game finished dialog
   const onFinishedDlgClosed = () => {
     setGameFinishedDlgOpen(false);
   };
 
+  // Callback to close the New Game dialog
   const onNewGameDlgClosed = () => {
     setNewGameDialogOpen(false);
   };
 
+  // Callback to reset game (Play again the same game)
   const onGameReset = () => {
     dispatchGameBoard({ type: "reset" });
     setGameFinishedDlgOpen(false);
   };
 
+  // Callback to start a new game with new criteria
   const onNewGame = (
     opponent: Opponent,
     playerColor: Player,
@@ -64,6 +76,7 @@ const BoardComponent: FC = () => {
   useEffect(() => {
     // Set the callback listeners
     gameBoard.onGameFinishedCallback = onGameFinished;
+    gameBoard.onAIStartEndCallback = onAIThinkingChanged;
   });
 
   let dialogContent = "";
@@ -92,9 +105,10 @@ const BoardComponent: FC = () => {
       />
       <Header>
         <h1>Gobang</h1>
+        {aiThinking ? <span>Thinking...</span> : null}
       </Header>
-      {useMemo(
-        () => (
+      {useMemo(() => {
+        return (
           <Content>
             <GameContainer>
               <Game
@@ -112,6 +126,16 @@ const BoardComponent: FC = () => {
               >
                 New Game
               </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  dispatchGameBoard({ type: "reset" });
+                }}
+              >
+                Start Over
+              </Button>
+
               <Button
                 variant="outlined"
                 disabled={!gameState.lastPlayedCell}
@@ -123,9 +147,8 @@ const BoardComponent: FC = () => {
               </Button>
             </RightContainer>
           </Content>
-        ),
-        [gameState, dispatchGameBoard]
-      )}
+        );
+      }, [gameState, dispatchGameBoard])}
     </BoardContainer>
   );
 };

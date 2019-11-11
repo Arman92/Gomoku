@@ -17,6 +17,7 @@ export const BoardContainer = styled.div`
 `;
 
 export const Header = styled.header`
+  position: relative;
   text-align: center;
   color: #9c5321;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5), 0 -1px 1px rgba(0, 0, 0, 0.5);
@@ -25,6 +26,15 @@ export const Header = styled.header`
     font-size: 2.5rem;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     letter-spacing: 0.3rem;
+  }
+
+  span {
+    font-size: 1.6rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    color: #ffffff;
+    position: absolute;
+    left: 2rem;
+    top: 1.2rem;
   }
 `;
 

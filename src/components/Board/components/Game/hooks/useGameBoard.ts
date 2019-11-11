@@ -5,7 +5,7 @@ import { GameBoard, GameState, Cell } from "@gobang/utils/GameBoard";
  * Actions that can be dispatched
  */
 export type GameBoardAction = {
-  type: "play" | "undo" | "reset";
+  type: "play" | "undo" | "reset" | "requestState";
   payload?: Cell;
 };
 
@@ -44,6 +44,11 @@ export const useGameBoard = (
         case "reset":
           gameBoard.reset();
 
+          return gameBoard.getGameState();
+
+        // This is just a dummy action to get the state back
+        // This in not cool, I need to think a better approach here
+        case "requestState":
           return gameBoard.getGameState();
 
         // throw an error

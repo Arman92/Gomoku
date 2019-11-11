@@ -54,6 +54,7 @@ export class GameBoard {
   public readonly length: number;
 
   public onGameFinishedCallback: ((winner: Player) => void) | null = null;
+  public onAIStartEndCallback: ((thinking: boolean) => void) | null = null;
 
   private cells: number[][] = [];
   private moves: Cell[] = [];
@@ -129,12 +130,14 @@ export class GameBoard {
     const { row, column } = cell;
 
     if (this.opponent === Opponent.COMPUTER) {
+      // Determine the color of AI Player
       this.cells[row][column] = isAI
         ? this.playerColor === Player.WHITE
           ? Player.BLACK
           : Player.WHITE
         : this.playerColor;
     } else {
+      // If it's a normal two player game, just use turn value to fill the cell.
       this.cells[row][column] = this.turn;
     }
 
@@ -149,8 +152,9 @@ export class GameBoard {
       this.ai &&
       !this.finished
     ) {
-      let difficultyValue;
+      let difficultyValue: number;
 
+      // Set the difficulty level according to the selected value
       switch (this.difficulty) {
         case Difficulty.NOVICE:
         default:
@@ -163,8 +167,16 @@ export class GameBoard {
           difficultyValue = 5;
           break;
       }
-      const aiMove = this.ai.calculateNextMove(difficultyValue);
-      this.play({ row: aiMove[0], column: aiMove[1] }, true);
+
+      if (this.onAIStartEndCallback) this.onAIStartEndCallback(true);
+
+      setTimeout(() => {
+        if (this.ai) {
+          const aiMove = this.ai.calculateNextMove(difficultyValue);
+          this.play({ row: aiMove[0], column: aiMove[1] }, true);
+          if (this.onAIStartEndCallback) this.onAIStartEndCallback(false);
+        }
+      }, 1);
     }
   }
 
@@ -175,7 +187,7 @@ export class GameBoard {
    * Sets the last changed cell's value to Empty, switches the player turn and resets the winning statuses.
    *
    */
-  public undo(): void {
+  public undo(undoingAIMovement?: boolean): void {
     const move = this.moves.pop();
     if (move) {
       this.cells[move.row][move.column] = CellValue.EMPTY;
@@ -184,6 +196,11 @@ export class GameBoard {
       this.switchTurns();
       this.finished = false;
       this.emptyCellsCount++;
+
+      // If we're playing against the AI, we should undo the AI's movement too.
+      if (this.opponent === Opponent.COMPUTER && !undoingAIMovement) {
+        this.undo(true);
+      }
     }
   }
   /**

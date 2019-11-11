@@ -32,7 +32,7 @@ const GameEndDialog: FC<DialogProps> = (props: DialogProps) => {
           Dismiss
         </Button>
         <Button onClick={onResetGame} size="large" color="primary">
-          New Game
+          Play Again
         </Button>
       </DialogActions>
     </Dialog>

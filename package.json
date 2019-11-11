@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@types/styled-components": "^4.1.20",
+    "jest-styled-components": "^6.3.3",
     "prettier": "^1.18.2",
     "prettier-tslint": "^0.4.2",
     "react-app-rewired": "^2.1.4",
