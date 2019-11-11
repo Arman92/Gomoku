@@ -8,21 +8,19 @@ export class GameBoard {
    * Gets the Singleton instance of GameBoard.
    * creates a fresh instance if it's called for the first time
    *
-   * @param rows  Number of rows of Game Board
-   * @param columns  Number of columns of Game Board
+   * @param length  Number of cells in a row or column of Game Board
    *
    * @returns Singleton instance of GameBoard
    */
-  public static getInstance(rows: number, columns: number): GameBoard {
-    if (!GameBoard.instance) GameBoard.instance = new GameBoard(rows, columns);
+  public static getInstance(length: number): GameBoard {
+    if (!GameBoard.instance) GameBoard.instance = new GameBoard(length);
     return GameBoard.instance;
   }
 
   private static instance: GameBoard | null = null;
-  public readonly rows: number;
-  public readonly columns: number;
+  public readonly length: number;
 
-  public onGameFinishedCallback: ((winner: Player) => void) | null= null;
+  public onGameFinishedCallback: ((winner: Player) => void) | null = null;
 
   private cells: number[][] = [];
   private moves: Cell[] = [];
@@ -32,10 +30,8 @@ export class GameBoard {
   private winnerCells: Cell[] = [];
   private emptyCellsCount: number = 0;
 
-  private constructor(rows: number, columns: number) {
-    this.rows = rows;
-    this.columns = columns;
-    this.emptyCellsCount = rows * columns;
+  private constructor(length: number) {
+    this.length = length;
 
     this.clearCells();
   }
@@ -45,11 +41,14 @@ export class GameBoard {
    */
   public clearCells() {
     this.cells = [];
+    this.moves = [];
+    this.winnerCells = [];
+    this.emptyCellsCount = this.length * this.length;
 
-    for (let i = 0; i < this.rows; i++) {
+    for (let i = 0; i < this.length; i++) {
       this.cells[i] = [];
 
-      for (let j = 0; j < this.columns; j++) {
+      for (let j = 0; j < this.length; j++) {
         this.cells[i][j] = CellValue.EMPTY;
       }
     }
@@ -75,9 +74,9 @@ export class GameBoard {
     const { row, column } = cell;
     this.cells[row][column] = this.turn;
     this.moves.push({ row, column });
+    this.emptyCellsCount--;
     this.checkIfWins(cell);
     this.switchTurns();
-    this.emptyCellsCount--;
   }
 
   /**
@@ -94,7 +93,8 @@ export class GameBoard {
       this.winner = Player.NONE;
       this.winnerCells = [];
       this.switchTurns();
-    this.emptyCellsCount++;
+      this.finished = false;
+      this.emptyCellsCount++;
     }
   }
   /**
@@ -104,13 +104,10 @@ export class GameBoard {
    */
   public reset(): void {
     this.finished = false;
-      this.clearCells();
-      this.winner = Player.NONE;
-      this.winnerCells = [];
-      this.turn = Player.BLACK
-      this.emptyCellsCount = this.rows * this.columns;
+    this.clearCells();
+    this.winner = Player.NONE;
+    this.turn = Player.BLACK;
   }
-  
 
   /**
    * Get the current state of Game Board
@@ -132,7 +129,6 @@ export class GameBoard {
     };
   }
 
-  
   /**
    * Gets called when the game is finished (Either a player wins or the Game is Tie)
    * @param cell  The last move the player has made.
@@ -140,7 +136,7 @@ export class GameBoard {
   private gameFinished(winner: Player) {
     this.finished = true;
     this.winner = winner;
-      if (this.onGameFinishedCallback) this.onGameFinishedCallback(winner);
+    if (this.onGameFinishedCallback) this.onGameFinishedCallback(winner);
   }
 
   /**
@@ -156,7 +152,7 @@ export class GameBoard {
 
     /* ----------- CHECK CURRENT ROW ------------- */
     // Check current row forward direction ->
-    for (let i = cell.column + 1; i < this.columns; i++) {
+    for (let i = cell.column + 1; i < this.length; i++) {
       if (this.cells[cell.row][i] === this.turn) {
         this.winnerCells.push({ row: cell.row, column: i });
       } else break;
@@ -175,7 +171,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
@@ -183,14 +179,14 @@ export class GameBoard {
     // Check current column forward direction ->
     this.winnerCells = [cell];
 
-    for (let i = cell.row + 1; i < this.rows; i++) {
+    for (let i = cell.row + 1; i < this.length; i++) {
       if (this.cells[i][cell.column] === this.turn) {
         this.winnerCells.push({ row: i, column: cell.column });
       } else break;
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
@@ -202,7 +198,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
@@ -214,8 +210,8 @@ export class GameBoard {
       return x > y ? x : y;
     };
 
-    for (let i = 1; i < max(this.rows, this.columns); i++) {
-      if (cell.row + i >= this.rows || cell.column + i >= this.columns) {
+    for (let i = 1; i < max(this.length, this.length); i++) {
+      if (cell.row + i >= this.length || cell.column + i >= this.length) {
         break;
       }
 
@@ -225,11 +221,11 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
-    for (let i = 1; i < max(cell.row, cell.column); i++) {
+    for (let i = 1; i < max(this.length, this.length); i++) {
       if (cell.row - i < 0 || cell.column - i < 0) {
         break;
       }
@@ -240,7 +236,7 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
@@ -249,8 +245,8 @@ export class GameBoard {
     /* ----------- CHECK MINOR DIAGONAL [  ╱  ] ------------- */
     this.winnerCells = [cell];
 
-    for (let i = 1; i < max(this.rows, this.columns); i++) {
-      if (cell.row - i < 0 || cell.column + i > this.columns) {
+    for (let i = 1; i < max(this.length, this.length); i++) {
+      if (cell.row - i < 0 || cell.column + i > this.length) {
         break;
       }
 
@@ -260,12 +256,12 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
-    for (let i = 1; i < max(this.rows, this.columns); i++) {
-      if (cell.row + i >= this.rows || cell.column - i < 0) {
+    for (let i = 1; i < max(this.length, this.length); i++) {
+      if (cell.row + i >= this.length || cell.column - i < 0) {
         break;
       }
 
@@ -275,11 +271,10 @@ export class GameBoard {
     }
 
     if (this.winnerCells.length >= 5) {
-      this.gameFinished(this.turn);      
+      this.gameFinished(this.turn);
       return;
     }
 
-    
     //
     //
     /* ----------- CHECK IF GAME IS A TIE ------------- */

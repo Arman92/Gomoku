@@ -1,75 +1,117 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from "react";
+import { Button } from "@material-ui/core";
 
-import { BoardContainer, GameContainer, RightContainer, Header, Content, StyledButton } from './styled';
-import Game from './components/Game';
-import Dialog from './components/Dialog';
+import {
+  BoardContainer,
+  GameContainer,
+  RightContainer,
+  Header,
+  Content
+} from "./styled";
+import Game from "./components/Game";
+import { useGameBoard } from "./components/Game/hooks/useGameBoard";
+import GameFinishedDialog from "./components/GameFinishedDialog";
+import NewGameDialog from "./components/NewGameDialog";
 
-import { GameBoard, Player } from '@gobang/utils/GameBoard';
+import { GameBoard, Player } from "@gobang/utils/GameBoard";
 
 const BoardComponent: FC = () => {
-	const rows = 19;
-	const columns = 19;
-	const [ open, setOpen ] = useState(false);
-	let gameBoard: GameBoard | null = null;
+  const length = 19;
 
-	const onGameFinished = (winner: Player) => {
-		setOpen(true);
-	};
+  // Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
+  const gameBoard: GameBoard = GameBoard.getInstance(length);
 
-	const handleDialogClose = () => {
-		setOpen(false);
-	};
+  const [gameFinishedDlgOpen, setGameFinishedDlgOpen] = useState(false);
+  const [newGameDialogOpen, setNewGameDialogOpen] = useState(false);
+  const [winner, setWinner] = useState<null | Player>(null);
+  const [gameState, dispatchGameBoard] = useGameBoard(gameBoard);
 
-	useEffect(() => {
-		// Get a singleton instance of the GameBoard (creates an instance if it's first-time-call)
-		gameBoard = GameBoard.getInstance(rows, columns);
-		// Set the callback listeners
-		gameBoard.onGameFinishedCallback = onGameFinished;
-	});
+  const onGameFinished = (gameWinner: Player) => {
+    setGameFinishedDlgOpen(true);
+    setWinner(gameWinner);
+  };
 
-	let dialogContent = '';
-	if (gameBoard != null) {
-		if ((gameBoard as GameBoard).getGameState().winner === Player.BLACK) {
-			dialogContent = 'BLACK Player Wins!';
-		} else {
-			dialogContent = 'WHITE Player Wins!';
-		}
-	}
+  const onFinishedDlgClosed = () => {
+    setGameFinishedDlgOpen(false);
+  };
 
-	return (
-		<BoardContainer>
-			<Header>
-				<h1>Gobang</h1>
-			</Header>
-			<Content>
-				<GameContainer>
-					<Dialog open={open} content={dialogContent} onClose={handleDialogClose} />
-					{gameBoard ? (
-						<Game rows={rows} columns={columns} gameBoard={gameBoard} />
-					) : (
-						<h2>Loading Game Board...</h2>
-					)}
-				</GameContainer>
-				<RightContainer>
-					<StyledButton
-						variant="outlined"
-						onClick={() => {
-							// dispatchGameBoard({ type: "undo" });
-						}}
-					>
-						New Game
-					</StyledButton>
-					<StyledButton
-						variant="outlined"
-						onClick={() => {
-							// dispatchGameBoard({ type: "undo" });
-						}}
-					>
-						Undo
-					</StyledButton>
-				</RightContainer>
-			</Content>
-		</BoardContainer>
-	);
+  const onNewGameDlgClosed = () => {
+    setNewGameDialogOpen(false);
+  };
+
+  const onGameReset = () => {
+    dispatchGameBoard({ type: "reset" });
+    setGameFinishedDlgOpen(false);
+  };
+
+  const onNewGame = () => {};
+
+  useEffect(() => {
+    // Set the callback listeners
+    gameBoard.onGameFinishedCallback = onGameFinished;
+  });
+
+  let dialogContent = "";
+  if (gameState.finished) {
+    if (winner === Player.BLACK) {
+      dialogContent = "BLACK Player Wins!";
+    } else if (winner === Player.WHITE) {
+      dialogContent = "WHITE Player Wins!";
+    } else {
+      dialogContent = "Game Is TIE!";
+    }
+  }
+
+  return (
+    <BoardContainer>
+      <GameFinishedDialog
+        open={gameFinishedDlgOpen}
+        content={dialogContent}
+        onClose={onFinishedDlgClosed}
+        onResetGame={onGameReset}
+      />
+      <NewGameDialog
+        open={newGameDialogOpen}
+        onClose={onNewGameDlgClosed}
+        onNewGame={onNewGame}
+      />
+      <Header>
+        <h1>Gobang</h1>
+      </Header>
+      {useMemo(
+        () => (
+          <Content>
+            <GameContainer>
+              <Game
+                length={length}
+                gameState={gameState}
+                dispatchGame={dispatchGameBoard}
+              />
+            </GameContainer>
+            <RightContainer>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setNewGameDialogOpen(true);
+                }}
+              >
+                New Game
+              </Button>
+              <Button
+                variant="outlined"
+                disabled={!gameState.lastPlayedCell}
+                onClick={() => {
+                  dispatchGameBoard({ type: "undo" });
+                }}
+              >
+                Undo
+              </Button>
+            </RightContainer>
+          </Content>
+        ),
+        [gameState]
+      )}
+    </BoardContainer>
+  );
 };
 export default BoardComponent;

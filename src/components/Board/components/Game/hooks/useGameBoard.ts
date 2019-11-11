@@ -4,23 +4,21 @@ import { GameBoard, GameState, Cell } from "@gobang/utils/GameBoard";
 /**
  * Actions that can be dispatched
  */
-type GameBoardAction = {
-  type: "play" | "undo"     | "reset";
+export type GameBoardAction = {
+  type: "play" | "undo" | "reset";
   payload?: Cell;
 };
 
 /**
  * Reducer hook to manipulate game board state
  *
- * @param rows  Number of rows of Game Board
- * @param columns  Number of columns of Game Board
+ * @param gameBoard  GameBoard instance
  *
  * @returns Array of two elements, first the GameState and the second a dispatch function
  */
 export const useGameBoard = (
-gameBoard: GameBoard
-  ): [GameState, React.Dispatch<GameBoardAction>] => {
-
+  gameBoard: GameBoard
+): [GameState, React.Dispatch<GameBoardAction>] => {
   //
   // Our reducer function to manipulate the states
   // We are using useCallback so we only create this reducer once during component's lifetime.

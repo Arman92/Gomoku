@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { Player } from "@gobang/utils/GameBoard/types";
 
 type GameProps = {
-  rows: number;
-  columns: number;
+  length: number;
 };
 
 type ButtonProps = {
@@ -15,8 +14,8 @@ export const GameContainer = styled.div<GameProps>`
   height: 100%;
   object-fit: contain;
   display: grid;
-  grid-template-rows: repeat(${props => props.rows}, minmax(1rem, 1fr));
-  grid-template-columns: repeat(${props => props.columns}, minmax(1rem, 1fr));
+  grid-template-rows: repeat(${props => props.length}, minmax(1rem, 1fr));
+  grid-template-columns: repeat(${props => props.length}, minmax(1rem, 1fr));
 `;
 
 export const CellContainer = styled.div<GameProps>`
@@ -42,7 +41,7 @@ export const CellContainer = styled.div<GameProps>`
   }
 
   /* first row of the grid */
-  &:nth-child(-n + ${props => props.columns}) {
+  &:nth-child(-n + ${props => props.length}) {
     &:after {
       height: 50%;
       bottom: 0;
@@ -50,14 +49,14 @@ export const CellContainer = styled.div<GameProps>`
   }
 
   /* last column of the grid */
-  &:nth-child(${props => props.rows}n) {
+  &:nth-child(${props => props.length}n) {
     &:before {
       width: 50%;
     }
   }
 
   /* first column of the grid */
-  &:nth-child(${props => props.rows}n + 1) {
+  &:nth-child(${props => props.length}n + 1) {
     &:before {
       width: 50%;
       left: 50%;
@@ -65,7 +64,7 @@ export const CellContainer = styled.div<GameProps>`
   }
 
   /* last row of the grid */
-  &:nth-child(n + ${props => props.rows * (props.columns - 1) + 1}) {
+  &:nth-child(n + ${props => props.length * (props.length - 1) + 1}) {
     &:after {
       height: 50%;
       top: 0;
