@@ -23,6 +23,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^@gobang(.*)$": "<rootDir>/src$1"
+    }
+  },
   "dependencies": {
     "@material-ui/core": "^4.6.0",
     "@types/jest": "24.0.21",
