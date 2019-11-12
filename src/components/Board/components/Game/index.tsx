@@ -45,7 +45,7 @@ const GameComponent: FC<GameProps> = (props: GameProps) => {
         });
       }
 
-      // Every time Highlight last move:
+      // Everytime Highlight last move:
       const { lastPlayedCell } = gameState;
       if (
         lastPlayedCell &&
@@ -63,9 +63,7 @@ const GameComponent: FC<GameProps> = (props: GameProps) => {
             onClick={cellClickHandler}
             data-row={i}
             data-column={j}
-            disabled={
-              gameState.finished || gameState.cells[i][j] !== Player.NONE
-            }
+            disabled={gameState.finished}
           />
         </CellContainer>
       );

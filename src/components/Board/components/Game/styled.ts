@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Player } from "@gobang/utils/GameBoard/types";
+import { Player } from "utils/GameBoard/types";
 
 type GameProps = {
   length: number;
@@ -10,12 +10,26 @@ type ButtonProps = {
 };
 
 export const GameContainer = styled.div<GameProps>`
-  width: 100%;
-  height: 100%;
   object-fit: contain;
   display: grid;
-  grid-template-rows: repeat(${props => props.length}, minmax(1rem, 1fr));
-  grid-template-columns: repeat(${props => props.length}, minmax(1rem, 1fr));
+  grid-template-rows: repeat(${props => props.length}, minmax(1.2rem, 1fr));
+  grid-template-columns: repeat(${props => props.length}, minmax(1.2rem, 1fr));
+  align-self: center;
+  justify-self: center;
+  flex: 1;
+
+  &::before {
+    content: "";
+    width: 0;
+    padding-bottom: 100%;
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
+
+  & > *:first-child {
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+  }
 `;
 
 export const CellContainer = styled.div<GameProps>`

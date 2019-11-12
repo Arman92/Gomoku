@@ -13,12 +13,7 @@ import { useGameBoard } from "./components/Game/hooks/useGameBoard";
 import { GameFinishedDialog } from "./components/GameFinishedDialog";
 import { NewGameDialog } from "./components/NewGameDialog";
 
-import {
-  GameBoard,
-  Player,
-  Difficulty,
-  Opponent
-} from "@gobang/utils/GameBoard";
+import { GameBoard, Player, Difficulty, Opponent } from "utils/GameBoard";
 
 const BoardComponent: FC = () => {
   const length = 19;

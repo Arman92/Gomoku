@@ -1,4 +1,4 @@
-import { GameBoard } from "@gobang/utils/GameBoard";
+import { GameBoard } from "utils/GameBoard";
 
 export class GameAI {
   public evaluationCount: number = 0;

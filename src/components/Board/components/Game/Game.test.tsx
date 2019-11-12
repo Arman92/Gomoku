@@ -6,7 +6,7 @@ import sinon from "sinon";
 
 import Game from "./Game";
 import { GameBoardAction } from "./hooks/useGameBoard";
-import { GameBoard, Player } from "@gobang/utils/GameBoard";
+import { GameBoard, Player } from "utils/GameBoard";
 import { CellContainer, CellButton } from "./styled";
 
 configure({ adapter: new Adapter() });

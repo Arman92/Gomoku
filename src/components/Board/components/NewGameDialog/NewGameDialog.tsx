@@ -14,7 +14,7 @@ import {
 
 import { FormRow } from "./styled";
 
-import { Player, Opponent, Difficulty } from "@gobang/utils/GameBoard";
+import { Player, Opponent, Difficulty } from "utils/GameBoard";
 
 type DialogProps = {
   open: boolean;

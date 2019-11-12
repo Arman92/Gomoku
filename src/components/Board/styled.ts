@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import boardBg from "@gobang/assets/imgs/2551066.jpg";
+import boardBg from "assets/imgs/2551066.jpg";
 
 export const BoardContainer = styled.div`
   width: 90vw;
@@ -46,6 +46,8 @@ export const Content = styled.div`
 
 export const GameContainer = styled.div`
   flex: 0.9;
+  display: flex;
+  justify-content: center;
 `;
 
 export const RightContainer = styled.div`

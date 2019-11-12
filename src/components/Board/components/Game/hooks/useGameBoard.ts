@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from "react";
-import { GameBoard, GameState, Cell } from "@gobang/utils/GameBoard";
+import { GameBoard, GameState, Cell } from "utils/GameBoard";
 
 /**
  * Actions that can be dispatched

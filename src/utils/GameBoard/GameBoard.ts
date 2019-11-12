@@ -1,4 +1,4 @@
-import { GameAI } from "@gobang/utils/GameAI";
+import { GameAI } from "utils/GameAI";
 import {
   Cell,
   Player,

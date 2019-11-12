@@ -3,8 +3,7 @@ import "jest-styled-components";
 
 import { mount } from "enzyme";
 
-import { GameContainer, CellContainer, CellButton } from "./styled";
-import { Player } from "@gobang/utils/GameBoard";
+import { GameContainer, CellContainer } from "./styled";
 
 describe("Game Styled Components", () => {
   it("It should render GameContainer correctly", () => {
