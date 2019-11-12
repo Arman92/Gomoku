@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from "react";
 
-import { GameContainer, CellContainer, Button } from "./styled";
+import { GameContainer, CellContainer, CellButton } from "./styled";
 import { Player, GameState } from "@gobang/utils/GameBoard";
 import { GameBoardAction } from "./hooks/useGameBoard";
 
@@ -45,7 +45,7 @@ const GameComponent: FC<GameProps> = (props: GameProps) => {
         });
       }
 
-      // Everytime Highlight last move:
+      // Every time Highlight last move:
       const { lastPlayedCell } = gameState;
       if (
         lastPlayedCell &&
@@ -57,7 +57,7 @@ const GameComponent: FC<GameProps> = (props: GameProps) => {
 
       buttons.push(
         <CellContainer length={length} key={`btn-${i}-${j}`}>
-          <Button
+          <CellButton
             turn={gameState.turn}
             className={className}
             onClick={cellClickHandler}

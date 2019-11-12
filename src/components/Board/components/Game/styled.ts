@@ -72,7 +72,7 @@ export const CellContainer = styled.div<GameProps>`
   }
 `;
 
-export const Button = styled.button<ButtonProps>`
+export const CellButton = styled.button<ButtonProps>`
   width: 75%;
   height: 75%;
   background: transparent;

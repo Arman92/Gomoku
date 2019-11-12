@@ -8,10 +8,10 @@ import {
   Header,
   Content
 } from "./styled";
-import Game from "./components/Game";
+import { Game } from "./components/Game";
 import { useGameBoard } from "./components/Game/hooks/useGameBoard";
-import GameFinishedDialog from "./components/GameFinishedDialog";
-import NewGameDialog from "./components/NewGameDialog";
+import { GameFinishedDialog } from "./components/GameFinishedDialog";
+import { NewGameDialog } from "./components/NewGameDialog";
 
 import {
   GameBoard,
