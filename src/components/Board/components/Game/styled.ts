@@ -127,30 +127,16 @@ export const CellButton = styled.button<ButtonProps>`
     cursor: not-allowed;
   }
 
-  @-webkit-keyframes pulse {
-    0% {
-      border-color: #eff1f2;
-      background: transparent;
-      -webkit-transform: scale(0.1) translateZ(0px);
-      transform: scale(0.1) translateZ(0px);
-    }
-    to {
-      border-color: transparent;
-      -webkit-transform: scale(1.5) translateZ(0px);
-      transform: scale(1.5) translateZ(0px);
-    }
-  }
-
   @keyframes pulse {
     0% {
       border-color: rgba(18, 255, 235, 0.8);
       background: transparent;
-      transform: scale(0.9);
+      transform: scale(1.1) rotateZ(360deg);
     }
     to {
       border-color: transparent;
       border-width: 6px;
-      transform: scale(1.9);
+      transform: scale(1.9) rotateZ(360deg);
     }
   }
 
@@ -162,7 +148,7 @@ export const CellButton = styled.button<ButtonProps>`
     border-radius: 100%;
     z-index: -1;
     border: 2px solid rgba(239, 241, 242, 0);
-    animation: pulse 0.9s 0.4s infinite cubic-bezier(0.075, 0.82, 0.165, 1);
+    animation: pulse 0.9s 0.4s infinite ease-in-out;
     backface-visibility: hidden;
   }
 `;
