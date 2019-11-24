@@ -25,7 +25,7 @@ export const CellContainer = styled.div<GameProps>`
   &:before {
     content: "";
     position: absolute;
-    border-bottom: 1px black solid;
+    border-bottom: 1.5px black solid;
     height: 50%;
     width: 100%;
     z-index: -1;
@@ -34,7 +34,7 @@ export const CellContainer = styled.div<GameProps>`
   &:after {
     content: "";
     position: absolute;
-    border-right: 1px black solid;
+    border-right: 1.5px black solid;
     height: 100%;
     width: 50%;
     z-index: -1;
@@ -73,14 +73,14 @@ export const CellContainer = styled.div<GameProps>`
 `;
 
 export const CellButton = styled.button<ButtonProps>`
-  width: 75%;
-  height: 75%;
+  width: 90%;
+  height: 90%;
   background: transparent;
   opacity: 0.6;
   border: none;
   position: absolute;
   cursor: pointer;
-  transform: translate(15%, 15%);
+  transform: translate(5%, 5%);
   border-radius: 100%;
   z-index: 1;
 
