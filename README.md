@@ -3,7 +3,7 @@
 ### Installation
 
 ```bash
- git clone git@gitlab.com:Arman92/gobang.git && cd gobang
+ git clone git@github.com:Arman92/Gomoku.git && cd Gomoku
  yarn
 ```
 
