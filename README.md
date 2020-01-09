@@ -1,5 +1,9 @@
 ## Gomoku/Gobang (5 In A Row) written purely in React using Hooks!
 
+### Live Demo
+You can see the project running on CodeSandBox: [https://codesandbox.io/s/github/Arman92/Gomoku](https://codesandbox.io/s/github/Arman92/Gomoku)
+
+
 ### Installation
 
 ```bash
