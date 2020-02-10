@@ -53,6 +53,7 @@
     "@types/react-test-renderer": "^16.9.1",
     "@types/sinon": "^7.5.0",
     "@types/styled-components": "^4.1.20",
+    "cypress": "^4.0.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "enzyme-to-json": "^3.4.3",
