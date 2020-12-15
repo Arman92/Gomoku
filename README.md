@@ -3,6 +3,8 @@
 ### Live Demo
 You can see the project running on CodeSandBox: [https://codesandbox.io/s/github/Arman92/Gomoku](https://codesandbox.io/s/github/Arman92/Gomoku)
 
+![Screenshot of Gomoku](public/Screenshot_20201215_223205.png?raw=true "Screenshot of Gomoku")
+
 
 ### Installation
 
